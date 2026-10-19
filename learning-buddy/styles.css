@@ -1,0 +1,196 @@
+/* Calm palette: soft, low-saturation colours, no pure white glare. */
+:root {
+  --bg: #f4f1ea;
+  --card: #fffdf8;
+  --ink: #2d3142;
+  --muted: #6b6f80;
+  --accent: #5b8def;
+  --good: #4caf82;
+  --try: #e9a84c;
+  --line: #e0dbcf;
+  --radius: 22px;
+  --tap: 72px;
+  color-scheme: light;
+}
+:root[data-theme="contrast"] {
+  --bg: #000;
+  --card: #111;
+  --ink: #fff;
+  --muted: #ddd;
+  --accent: #ffd400;
+  --good: #3dff8f;
+  --try: #ffb000;
+  --line: #fff;
+  color-scheme: dark;
+}
+:root[data-theme="night"] {
+  --bg: #1d2030;
+  --card: #2a2e42;
+  --ink: #e9e6dd;
+  --muted: #a7a9b8;
+  --accent: #8fb0f5;
+  --good: #7cc9a0;
+  --try: #e5b877;
+  --line: #3c4159;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 600 1.25rem/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* removes the 300ms tap delay */
+  overscroll-behavior: none;
+  user-select: none;
+}
+:root[data-font="large"] body { font-size: 1.5rem; }
+
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 4px solid var(--accent); outline-offset: 3px; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 2;
+  display: flex; align-items: center; gap: 12px;
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+  background: var(--bg);
+  border-bottom: 2px solid var(--line);
+}
+.topbar h1 { flex: 1; margin: 0; font-size: 1.4em; }
+.stars { font-size: 1.2em; white-space: nowrap; }
+.icon-btn {
+  position: relative;
+  width: 56px; height: 56px;
+  border: 2px solid var(--line); border-radius: 50%;
+  background: var(--card); font-size: 1.5rem;
+}
+.hold-ring {
+  position: absolute; inset: -4px; border-radius: 50%;
+  border: 4px solid var(--accent);
+  transform: scale(0); opacity: 0;
+}
+.hold.holding .hold-ring { opacity: 1; transform: scale(1); transition: transform 1.5s linear; }
+
+main {
+  max-width: 960px; margin: 0 auto;
+  padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
+  outline: none;
+}
+main:focus-visible { outline: none;
+}
+
+.lead { color: var(--muted); margin: 0 0 18px; font-size: 1.05em; }
+
+/* Big, predictable tiles. Same size, same place every time. */
+.grid {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.tile {
+  min-height: 150px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  padding: 16px;
+  background: var(--card);
+  border: 3px solid var(--line); border-radius: var(--radius);
+  text-align: center;
+  transition: transform .12s ease;
+  contain: layout paint; /* each tile repaints independently */
+}
+.tile:active { transform: scale(.97); }
+.tile .emoji { font-size: 3.2rem; line-height: 1; }
+.tile.done { border-color: var(--good); background: color-mix(in srgb, var(--good) 14%, var(--card)); }
+
+.btn {
+  min-height: var(--tap); padding: 0 28px;
+  border: 3px solid var(--accent); border-radius: var(--radius);
+  background: var(--accent); color: #fff;
+}
+:root[data-theme="contrast"] .btn:not(.ghost),
+:root[data-theme="contrast"] .seg button[aria-pressed="true"] { color: #000; }
+.btn.ghost { background: var(--card); color: var(--ink); border-color: var(--line); }
+.row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+
+/* Activity question */
+.prompt {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--card); border: 3px solid var(--line); border-radius: var(--radius);
+  padding: 18px; margin-bottom: 18px; font-size: 1.3em;
+}
+.prompt .say { flex: none; }
+.prompt .show { font-size: 2.6rem; letter-spacing: 4px; line-height: 1.2; word-break: break-word; }
+.choices { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.choice { min-height: 160px; font-size: 3.6rem; }
+.choice.word { font-size: 2rem; }
+.choice.wrong { border-color: var(--try); opacity: .55; }
+.choice.right { border-color: var(--good); background: color-mix(in srgb, var(--good) 18%, var(--card)); }
+.swatch { width: 90px; height: 90px; border-radius: 50%; border: 3px solid rgba(0,0,0,.15); }
+
+.feedback { min-height: 2.2em; margin: 16px 0 0; text-align: center; font-size: 1.25em; }
+.progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+.progress i { width: 18px; height: 18px; border-radius: 50%; background: var(--line); }
+.progress i.on { background: var(--good); }
+
+/* Routine steps */
+.steps { display: grid; gap: 12px; }
+.step {
+  display: flex; align-items: center; gap: 16px;
+  min-height: 84px; padding: 12px 18px;
+  background: var(--card); border: 3px solid var(--line); border-radius: var(--radius);
+  text-align: left;
+}
+.step .emoji { font-size: 2.6rem; }
+.step .label { flex: 1; }
+.step .check { font-size: 2rem; opacity: .25; }
+.step.done { border-color: var(--good); }
+.step.done .check { opacity: 1; }
+.step.now { border-color: var(--accent); }
+.step.done .label { text-decoration: line-through; color: var(--muted); }
+
+/* First / Then board */
+.first-then { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.first-then .slot { background: var(--card); border: 3px dashed var(--line); border-radius: var(--radius); padding: 16px; text-align: center; }
+.first-then .slot h2 { margin: 0 0 8px; font-size: 1em; color: var(--muted); }
+.first-then .big { font-size: 4rem; }
+
+/* Calm corner breathing bubble: transform-only animation (GPU composited). */
+.breathe-wrap { display: grid; place-items: center; height: 300px; }
+.bubble {
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #c9dcff, var(--accent));
+  transform: scale(.55);
+  will-change: transform;
+}
+.bubble.go { animation: breathe 10s ease-in-out infinite; }
+@keyframes breathe { 0%,100% { transform: scale(.55); } 40%,55% { transform: scale(1); } }
+
+/* Visual timer: shrinking pie via conic-gradient, updated a few times per second. */
+.timer {
+  width: 240px; height: 240px; margin: 10px auto; border-radius: 50%;
+  background: conic-gradient(var(--try) calc(var(--p, 1) * 360deg), var(--line) 0);
+  display: grid; place-items: center;
+}
+.timer span { background: var(--card); width: 150px; height: 150px; border-radius: 50%; display: grid; place-items: center; font-size: 2rem; }
+
+/* Settings */
+.setting { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 2px solid var(--line); }
+.seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.seg button { min-height: 52px; padding: 0 16px; border-radius: 14px; border: 2px solid var(--line); background: var(--card); }
+.seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: #fff; }
+
+.reward { text-align: center; padding: 24px 0; }
+.reward .emoji { font-size: 6rem; display: block; }
+
+@media (max-width: 480px) {
+  .tile { min-height: 130px; }
+  .choice { min-height: 130px; font-size: 3rem; }
+  .first-then .big { font-size: 3rem; }
+}
+
+/* Respect OS reduced-motion, and the in-app "calm motion" switch. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001s !important; transition-duration: .001s !important; }
+  .bubble.go { animation: breathe 10s ease-in-out infinite !important; } /* breathing stays: it is slow and purposeful */
+}
+:root[data-motion="off"] *, :root[data-motion="off"] *::before { transition: none !important; }
