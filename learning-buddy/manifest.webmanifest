@@ -1,0 +1,12 @@
+{
+  "name": "Learning Buddy",
+  "short_name": "Buddy",
+  "description": "A calm learning and habits app for autistic children.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f1ea",
+  "theme_color": "#5b8def",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
