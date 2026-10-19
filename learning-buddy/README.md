@@ -36,6 +36,12 @@ python3 -m http.server 8080      # or: npx serve .
 ```
 
 Open http://localhost:8080. On a phone or tablet, use **Add to Home Screen** to install it.
+
+### Online (GitHub Pages)
+
+The app is published at **https://kingmist9220.github.io/New-project-/** by the
+`.github/workflows/pages.yml` workflow, which redeploys whenever `learning-buddy/` changes on `main`.
+One-time setup: in the repository go to **Settings → Pages** and set **Source** to **GitHub Actions**.
 To publish it, upload the folder to any static host (GitHub Pages, Netlify, and so on). The offline
 service worker needs HTTPS or localhost.
 
